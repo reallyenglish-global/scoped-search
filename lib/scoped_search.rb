@@ -30,12 +30,10 @@ class ScopedSearch
     
     def build_relation
       return model_class if attributes.empty?
-      attributes.reject { |k,v| v.blank? || v.to_s == "false" }.inject(model_class) do |s, k|
+      attributes.reject { |k,v| v.blank? }.inject(model_class) do |s, k|
         if model_class.scopes.keys.include?(k.first.to_sym)
           if k.second.is_a?(Array) && multi_params?(k.first)
             s.send(*k.flatten)
-          elsif k.second.to_s == "true"
-            s.send(k.first)
           else
             s.send(k.first, k.second)
           end
